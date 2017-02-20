@@ -40,7 +40,7 @@ feature 'restatuants' do
       visit '/restaurants'
       click_link 'KFC'
       expect(page).to have_content('KFC')
-      expect(current_path).to_eq "/restaurants/#{kfc.id}"
+      expect(current_path).to eq "/restaurants/#{kfc.id}"
     end
   end
 end
