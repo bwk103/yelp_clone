@@ -1,7 +1,7 @@
 class ReviewsController < ApplicationController
 
   def index
-    @reviews = Review.all 
+    @reviews = Review.all
 
   end
 
@@ -19,7 +19,7 @@ class ReviewsController < ApplicationController
   private
 
   def review_params
-    params.require(:review).permit(:thoughts, :ratings)
+    params.require(:review).permit(:thoughts, :rating)
   end
 
 end
