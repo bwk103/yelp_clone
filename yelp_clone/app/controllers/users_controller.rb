@@ -6,4 +6,8 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
+  def check_user_id(id)
+    id == current_user.id
+  end
+
 end

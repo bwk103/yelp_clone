@@ -62,8 +62,12 @@ feature "User can sign in and out" do
 
     it "allows only the author to edit the restaurant details" do
       click_link "Edit Bills"
-      save_and_open_page
       expect(page).to have_content("You do not have permission to edit this restaurant")
+    end
+
+    it "allows only the author to delete the restaurant details" do
+      click_link "Delete Bills"
+      expect(page).to have_content("You do not have permission to delete this restaurant")
     end
   end
 end
