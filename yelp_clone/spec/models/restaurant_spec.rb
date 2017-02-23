@@ -12,4 +12,8 @@ describe Restaurant, type: :model do
     restaurant = Restaurant.new(name: "Moe's Tavern")
     expect(restaurant).to have(1).error_on(:name)
   end
+
+  context "associations" do
+    it { should have_one(:user) }
+  end
 end

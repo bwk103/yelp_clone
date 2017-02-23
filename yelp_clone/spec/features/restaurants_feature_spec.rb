@@ -9,7 +9,7 @@ feature 'restatuants' do
     fill_in('Password confirmation', with: 'testtest')
     click_button 'Sign up'
   end
-  
+
   context 'no restaurants have been added' do
     scenario 'should display a prompt to add a restaurant' do
       visit '/restaurants'
@@ -20,7 +20,10 @@ feature 'restatuants' do
 
   context 'restaurants have been added' do
     before do
-      Restaurant.create(name: 'KFC')
+      user = User.create(email:'test@test.com', password: 'testtest', password_confirmation: 'testtest')
+      rest = Restaurant.create(name: 'KFC', description: 'Dirty chicken', user_id: user.id)
+      p rest
+      p user
     end
 
     scenario 'display restaurants' do

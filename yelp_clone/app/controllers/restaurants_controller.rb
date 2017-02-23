@@ -4,6 +4,7 @@ class RestaurantsController < ApplicationController
 
   def index
     @restaurants = Restaurant.all
+    @user = current_user
   end
 
   def new
@@ -12,7 +13,9 @@ class RestaurantsController < ApplicationController
 
   def create
     # before_action
-    @restaurant = Restaurant.create(restaurant_params)
+    p current_user
+    p restaurant_params
+    @restaurant = Restaurant.create(restaurant_params.merge(user_id: current_user.id))
     if @restaurant.save
       redirect_to '/restaurants'
     else
