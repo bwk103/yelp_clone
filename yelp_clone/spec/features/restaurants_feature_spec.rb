@@ -2,12 +2,7 @@ require 'rails_helper'
 
 feature 'restatuants' do
   before do
-    visit('/')
-    click_link "Sign up"
-    fill_in('Email', with: 'bob@test.com')
-    fill_in('Password', with: 'testtest')
-    fill_in('Password confirmation', with: 'testtest')
-    click_button 'Sign up'
+    sign_up
   end
 
   context 'no restaurants have been added' do
@@ -20,24 +15,22 @@ feature 'restatuants' do
 
   context 'restaurants have been added' do
     before do
-      user = User.create(email:'test@test.com', password: 'testtest', password_confirmation: 'testtest')
-      rest = Restaurant.create(name: 'KFC', description: 'Dirty chicken', user_id: user.id)
-      p rest
-      p user
+      @user = User.create(email:'test@test.com', password: 'testtest', password_confirmation: 'testtest')
+      Restaurant.create(name: 'Nandos', description: 'Chicken shop', user_id: @user.id)
     end
 
     scenario 'display restaurants' do
       visit '/restaurants'
-      expect(page).to have_content('KFC')
+      expect(page).to have_content('Nandos')
       expect(page).not_to have_content('No restaurants yet')
     end
   end
 
   context "creating restaurants" do
     scenario "prompts user to fill out a new form and then displays the restaurant" do
-      visit '/restaurants'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'KFC'
+      fill_in 'Description', with: "Dirty chicken"
       click_button 'Create Restaurant'
       expect(page).to have_content('KFC')
       expect(current_path).to eq '/restaurants'
@@ -45,41 +38,42 @@ feature 'restatuants' do
   end
 
   context "viewing restaurants" do
-
-    let!(:kfc){ Restaurant.create(name: 'KFC') }
-
     scenario "lets a user view a restaurant" do
-      visit '/restaurants'
-      click_link 'KFC'
-      expect(page).to have_content('KFC')
-      expect(current_path).to eq "/restaurants/#{kfc.id}"
+      create_restaurant
+      bills = Restaurant.first
+      click_link 'Bills'
+      expect(page).to have_content('Bills')
+      expect(current_path).to eq "/restaurants/#{bills.id}"
     end
   end
 
   context "editing restaurants" do
 
-    before { Restaurant.create name: 'KFC', description: 'Deep fried goodness!', id: 1 }
+    before do
+      create_restaurant
+    end
 
     scenario "let a user edit a restaurant" do
       visit '/restaurants'
-      click_link 'Edit KFC'
-      fill_in 'Name', with: 'Kentucky Fried Chicken'
-      fill_in 'Description', with: 'Deep fried goodness!'
+      click_link 'Edit Bills'
+      fill_in 'Name', with: 'Bills Restaurant'
+      fill_in 'Description', with: 'Cheap and cheerful'
       click_button 'Update Restaurant'
-      click_link 'Kentucky Fried Chicken'
-      expect(page).to have_content('Kentucky Fried Chicken')
-      expect(page).to have_content('Deep fried goodness!')
-      expect(current_path).to eq '/restaurants/1'
+      click_link 'Bills Restaurant'
+      expect(page).to have_content('Bills Restaurant')
+      expect(page).to have_content('Cheap and cheerful')
     end
   end
 
   context "deleting restaurants" do
-    before { Restaurant.create name: 'KFC', description: 'Deep fried goodness!' }
+    before do
+      create_restaurant
+    end
 
     scenario "removes a restaurant when the user clicks a delete link" do
       visit '/restaurants'
-      click_link 'Delete KFC'
-      expect(page).not_to have_content('KFC')
+      click_link 'Delete Bills'
+      expect(page).not_to have_content('Bills')
       expect(page).to have_content('Restaurant deleted successfully')
     end
   end

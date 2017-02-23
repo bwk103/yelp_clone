@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 feature "User can sign in and out" do
-  before { Restaurant.create name: 'Pizza Express' }
+  # before do
+  #   create_restaurant
+  # end
+
   context "User not signed in and on the homepage" do
     it "should see a 'sign in' link and a 'sign up' link" do
     visit ('/')
@@ -22,11 +25,14 @@ feature "User can sign in and out" do
     end
 
     it "should not allow users to delete restuarants" do
-      visit('/')
-      click_link 'Delete Pizza Express'
+      sign_up
+      create_restaurant
+      click_link 'Sign out'
+      click_link 'Delete Bills'
       expect(page).to have_content("Log in")
       expect(page).not_to have_content("Deleted successfully")
     end
+    
     # it "should not allow users to leave reviews" do
     #   visit('/')
     #   expect(page).not_to have_content('Review Pizza Express')
