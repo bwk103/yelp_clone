@@ -7,9 +7,9 @@ feature "User can sign in and out" do
 
   context "User not signed in and on the homepage" do
     it "should see a 'sign in' link and a 'sign up' link" do
-    visit ('/')
-    expect(page).to have_link 'Sign in'
-    expect(page).to have_link 'Sign up'
+      visit ('/')
+      expect(page).to have_link 'Sign in'
+      expect(page).to have_link 'Sign up'
     end
 
     it "should not see the 'sign out' link" do
@@ -32,13 +32,7 @@ feature "User can sign in and out" do
       expect(page).to have_content("Log in")
       expect(page).not_to have_content("Deleted successfully")
     end
-    
-    # it "should not allow users to leave reviews" do
-    #   visit('/')
-    #   expect(page).not_to have_content('Review Pizza Express')
-    # end
   end
-
   context "User signed in on the homepage" do
     before do
       visit('/')
@@ -57,12 +51,19 @@ feature "User can sign in and out" do
       expect(page).not_to have_content('Sign in')
       expect(page).not_to have_content('Sign up')
     end
+  end
 
-    # it "should let users leave reviews on restuarants" do
-    #   click_link 'Add a restaurant'
-    #   fill_in 'Name', with: "Bills"
-    #   click_button 'Create Restaurant'
-    #   expect(page).to have_content('Review Bills')
-    # end
+  context "User limitations" do
+    before do
+      sign_up
+      create_restaurant
+      rogue_sign_up
+    end
+
+    it "allows only the author to edit the restaurant details" do
+      click_link "Edit Bills"
+      save_and_open_page
+      expect(page).to have_content("You do not have permission to edit this restaurant")
+    end
   end
 end

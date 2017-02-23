@@ -30,7 +30,14 @@ class RestaurantsController < ApplicationController
   end
 
   def edit
+    @user = current_user
     @restaurant = Restaurant.find(params[:id])
+    if @restaurant.user_id == current_user.id
+      @restaurant.save
+    else
+      redirect_to '/restaurants'
+      flash[:notice] = "You do not have permission to edit this restaurant"
+    end
   end
 
   def update
