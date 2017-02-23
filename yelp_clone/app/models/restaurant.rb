@@ -6,11 +6,9 @@ class Restaurant < ApplicationRecord
   validates :name, length: { minimum: 3 }, uniqueness: true
 
 
-  def build_review(revparams = {}, user)
-    p user
-    # revparams[:user] ||= user
-    p revparams
-    review = Review.new(revparams)
+  def build_review(attributes = {}, user)
+    review = reviews.build(attributes)
+    review.user = user
     review
   end
 

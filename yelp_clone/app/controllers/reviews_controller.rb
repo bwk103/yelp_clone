@@ -2,12 +2,11 @@ class ReviewsController < ApplicationController
 
   def index
     @reviews = Review.all
-
   end
 
   def new
     @restaurant = Restaurant.find(params[:restaurant_id])
-    @review = Review.new
+    @review = @restaurant.reviews.new
   end
 
   def create
@@ -18,10 +17,26 @@ class ReviewsController < ApplicationController
       redirect_to restaurants_path
     else
       if @review.errors[:user]
-        redirect_to restaurants_path, alert: "You have already reviewed this restaurant"
+        redirect_to restaurants_path; flash[:notice] = "You have already reviewed this restaurant"
       else
         render :new
       end
+    end
+  end
+
+  def destroy
+    user = current_user
+    @restaurant = Restaurant.find(params[:restaurant_id])
+    @review = Review.find(params[:id])
+
+    if user.reviews.include(@review)
+      @review.destroy
+      flash[:notice] = "You deleted your review"
+      redirect_to restaurants_path
+
+    else
+      flash[:notice] = "You can only delete your own reviews"
+      redirect_to restaurants_path
     end
   end
 

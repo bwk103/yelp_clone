@@ -4,9 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook]
 
-  has_many :reviewed_restaurants, through: :reviews, source: :restaurant
   has_many :restaurants
   has_many :reviews
+  has_many :reviewed_restaurants, through: :reviews, source: :restaurant
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -24,6 +24,6 @@ class User < ApplicationRecord
   end
 
   def has_reviewed?(restaurant)
-    reviewed_restaurants.include?(restaurant)
+    reviewed_restaurants.include? restaurant
   end
 end
