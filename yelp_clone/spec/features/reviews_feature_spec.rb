@@ -12,7 +12,6 @@ feature 'reviewing' do
     fill_in 'Thoughts', with: 'Bang average!'
     select '3', from: 'Rating'
     click_button 'Leave Review'
-    save_and_open_page
     expect(current_path).to eq '/restaurants'
     expect(page).to have_content('Bang average!')
   end
