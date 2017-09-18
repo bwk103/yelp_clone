@@ -69,5 +69,18 @@ feature "User can sign in and out" do
       click_link "Delete Bills"
       expect(page).to have_content("You do not have permission to delete this restaurant")
     end
+
+    it "allows a user to only leave one review per restaurant" do
+      click_link 'Review Bills'
+      fill_in('Thoughts', with: "Yeah, not bad.")
+      select '4', from: 'Rating'
+      click_button('Leave Review')
+      click_link 'Review Bills'
+      fill_in('Thoughts', with: "Here's another review.")
+      select '2', from: 'Rating'
+      click_button('Leave Review')
+      expect(page).to have_content('You have already reviewed this restaurant')
+      expect(current_path).to eq ('/restaurants')
+    end
   end
 end
